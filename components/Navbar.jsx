@@ -24,12 +24,14 @@ function Navbar() {
   }
 
   useEffect(() => {
-    const q = query(collection(db, `users/${currentUser.uid}/vehicles`));
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setDocList(querySnapshot.docs.map(doc => doc.data()))
-    })
+    if (currentUser) {
+      const q = query(collection(db, `users/${currentUser.uid}/vehicles`));
+      const unsub = onSnapshot(q, (querySnapshot) => {
+        setDocList(querySnapshot.docs.map(doc => doc.data()))
+      })
+      return unsub
+    }
 
-    return unsub
   }, [currentUser])
 
   useEffect(() => {
@@ -63,7 +65,10 @@ function Navbar() {
             {docList.length > 0 && docList.map((val, index) => {
               return (
                 <Link href={`${val.name}`} key={index}>
-                  <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'>{val.name}</li>
+                  <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'
+                    style={{
+                      borderBottom: router.query.numplate == val.name && "solid 2px #4b5563"
+                    }}>{val.name}</li>
                 </Link>
               )
             })}

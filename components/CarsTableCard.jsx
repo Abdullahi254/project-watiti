@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { MdAdd } from 'react-icons/md'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, doc, setDoc, onSnapshot, deleteDoc } from 'firebase/firestore'
+import { collection, query, doc, setDoc, onSnapshot, orderBy, deleteDoc } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertComponent from './AlertComponent'
 
@@ -37,7 +37,7 @@ function CarsTableCard() {
             const event = new Date()
             await setDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${inputRef.current.value}`), {
                 name: inputRef.current.value,
-                date: event,
+                date: event.toLocaleString('en-GB'),
                 total: 0
             })
             setLoading(false)
@@ -78,8 +78,10 @@ function CarsTableCard() {
     }
 
     useEffect(() => {
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles`));
+        setLoading(true)
+        const q = query(collection(db, `users/${currentUser.uid}/vehicles`),  orderBy("date", "asc"));
         const unsub = onSnapshot(q, (querySnapshot) => {
+            setLoading(false)
             setDocList(querySnapshot.docs.map(doc => doc.data()))
         })
 
@@ -94,7 +96,7 @@ function CarsTableCard() {
                 <AlertComponent success={success} close={closeAlertHandler} />
             </div>
 
-            <h2 className='py-4 px-6 xs:text-2xl md:text-3xl underline'>List of Vehicles</h2>
+            <h2 className='py-4 px-6 xs:text-2xl md:text-3xl'>List of Vehicles</h2>
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -121,7 +123,7 @@ function CarsTableCard() {
                                         {val.name}
                                     </th>
                                     <td className="py-4 px-6">
-                                        {val.date.toDate().toString().split(' G')[0]}
+                                        {val.date}
                                     </td>
                                     <td className="py-4 px-6">
                                         KSH {val.total.toFixed(2)}
