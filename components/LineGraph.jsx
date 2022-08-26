@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore'
+import { collection, query, onSnapshot, where, orderBy } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import {
     Chart as ChartJS,
@@ -66,29 +66,12 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'September', 'October', 'November', 'December'
 ]
 
-const BAGROUNDCOLOR = [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgb(255, 205, 86, 0.2)',
-    'rgb(192, 192, 192, 0.2)',
-    'rgb(0, 0, 0, 0.2)',
-]
-
-const BORDERCOLOR = [
-    'rgba(255, 99, 132)',
-    'rgba(75, 192, 192)',
-    'rgb(255, 205, 86)',
-    'rgb(192, 192, 192)',
-    'rgb(0, 0, 0)',
-]
-
-function Bargraph() {
-    const { currentUser } = useAuth()
-
+function LineGraph() {
     const [labels, setLabels] = useState([])
-    const [names, setNames] = useState([])
-    const [datasets, setDatasets] = useState([])
+    const [totals, setTotals] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const { currentUser } = useAuth()
 
     useEffect(() => {
         const date = new Date()
@@ -104,38 +87,56 @@ function Bargraph() {
         setLabels(monthList)
     }, [])
 
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'KAA-123A',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-            ],
-            borderWidth: 1,
-        },
-        {
-            label: 'KAB-123B',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.2)',
-
-            ],
-            borderColor: [
-                'rgb(75, 192, 192)',
-            ],
-            borderWidth: 1,
+    useEffect(() => {
+        setLoading(true)
+        const list = []
+        const date = new Date()
+        const year = date.getFullYear()
+        const currentMonth = date.getMonth()
+        for (let i = (currentMonth - 3); i <= currentMonth; i++) {
+            if (i < 0) {
+                list.push(i + 12)
+            } else {
+                list.push(i)
+            }
         }
-        ]
+        console.log(list)
+        const q = query(collection(db, `users/${currentUser.uid}/vehicles/totalMonthly/${year}`), where("month", "in", list));
+        const unsub = onSnapshot(q, (querySnapshot) => {
+            setLoading(false)
+            setTotals(querySnapshot.docs.map(doc => {
+                return {
+                    month: MONTHS[doc.data().month],
+                    total: doc.data().total
+                }
+            }))
+        })
+
+        return unsub
+    }, [currentUser])
+
+    const data = {
+        labels: totals.map(obj=>obj.month),
+        datasets: [{
+            label: 'Total Monthly Expenses',
+            data: totals.map(obj=>obj.total),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            pointBackgroundColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgb(75, 192, 192)'
+        }]
     };
+
     return (
         <>
-            <Chart type='bar' data={data} options={{ scales: { y: { beginAtZero: true } } }} />
+            {
+                loading ? <ClipLoader loading={loading} color='#52525b' size={100} /> :
+                    <Chart type='line' data={data} options={{ scales: { y: { stacked: true } } }} />
+            }
+
         </>
     )
 }
 
-export default Bargraph
+export default LineGraph
