@@ -82,30 +82,32 @@ const BORDERCOLOR = [
     'rgb(0, 0, 0)',
 ]
 
-function Bargraph() {
+function Bargraph({ loading2, docList }) {
     const { currentUser } = useAuth()
 
-    const [labels, setLabels] = useState([])
-    const [names, setNames] = useState([])
-    const [datasets, setDatasets] = useState([])
+    const { cars, setCars } = useState([])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        setLoading(true)
+        const list = []
         const date = new Date()
+        const year = date.getFullYear()
         const currentMonth = date.getMonth()
-        const monthList = []
         for (let i = (currentMonth - 3); i <= currentMonth; i++) {
             if (i < 0) {
-                monthList.push(MONTHS[i + 12])
+                list.push(i + 12)
             } else {
-                monthList.push(MONTHS[i])
+                list.push(i)
             }
         }
-        setLabels(monthList)
-    }, [])
+        
+        console.log(docList)
+
+    }, [docList])
 
     const data = {
-        labels: labels,
+        labels: MONTHS.slice(8),
         datasets: [{
             label: 'KAA-123A',
             data: [65, 59, 80, 81, 56, 55, 40],

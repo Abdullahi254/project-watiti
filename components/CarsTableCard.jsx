@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import { MdAdd } from 'react-icons/md'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, doc, setDoc, onSnapshot, orderBy, deleteDoc } from 'firebase/firestore'
+import { doc, setDoc, deleteDoc } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertComponent from './AlertComponent'
 
-function CarsTableCard() {
+function CarsTableCard({loading2, docList}) {
     const { currentUser } = useAuth()
 
     const inputRef = useRef()
@@ -16,7 +16,6 @@ function CarsTableCard() {
     const [loading, setLoading] = useState(false)
     const [disabled, setDisabled] = useState(true)
     const [showButton, setShowButton] = useState(true)
-    const [docList, setDocList] = useState([])
 
     const handleAddForm = () => {
         setShowButton(prev => !prev)
@@ -77,21 +76,12 @@ function CarsTableCard() {
         setSuccess()
     }
 
-    useEffect(() => {
-        setLoading(true)
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles`),  orderBy("date", "asc"));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            setLoading(false)
-            setDocList(querySnapshot.docs.map(doc => doc.data()))
-        })
-
-        return unsub
-    }, [currentUser])
+    
     return (
         <div className=' border-2 rounded-lg overflow-x-auto relative bg-white py-10'>
 
             <div className='px-2 w-full flex flex-col justify-center items-center'>
-                <ClipLoader loading={loading} color='#52525b' size={50} />
+                <ClipLoader loading={loading||loading2} color='#52525b' size={50} />
                 <AlertComponent error={error} close={closeAlertHandler} />
                 <AlertComponent success={success} close={closeAlertHandler} />
             </div>

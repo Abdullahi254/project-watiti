@@ -67,25 +67,10 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 ]
 
 function LineGraph() {
-    const [labels, setLabels] = useState([])
     const [totals, setTotals] = useState([])
     const [loading, setLoading] = useState(false)
 
     const { currentUser } = useAuth()
-
-    useEffect(() => {
-        const date = new Date()
-        const currentMonth = date.getMonth()
-        const monthList = []
-        for (let i = (currentMonth - 3); i <= currentMonth; i++) {
-            if (i < 0) {
-                monthList.push(MONTHS[i + 12])
-            } else {
-                monthList.push(MONTHS[i])
-            }
-        }
-        setLabels(monthList)
-    }, [])
 
     useEffect(() => {
         setLoading(true)
@@ -100,7 +85,6 @@ function LineGraph() {
                 list.push(i)
             }
         }
-        console.log(list)
         const q = query(collection(db, `users/${currentUser.uid}/vehicles/totalMonthly/${year}`), where("month", "in", list));
         const unsub = onSnapshot(q, (querySnapshot) => {
             setLoading(false)
