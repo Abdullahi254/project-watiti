@@ -85,57 +85,177 @@ const BORDERCOLOR = [
 function Bargraph({ loading2, docList }) {
     const { currentUser } = useAuth()
 
-    const { cars, setCars } = useState([])
+
     const [loading, setLoading] = useState(false)
+    const [month1, setMonth1] = useState([])
+    const [month2, setMonth2] = useState([])
+    const [month3, setMonth3] = useState([])
+    const [month4, setMonth4] = useState([])
+
 
     useEffect(() => {
-        setLoading(true)
-        const list = []
-        const date = new Date()
-        const year = date.getFullYear()
-        const currentMonth = date.getMonth()
-        for (let i = (currentMonth - 3); i <= currentMonth; i++) {
-            if (i < 0) {
-                list.push(i + 12)
-            } else {
-                list.push(i)
+        if (docList.length > 0) {
+            setLoading(true)
+            const list = []
+            const date = new Date()
+            const year = date.getFullYear()
+            const currentMonth = date.getMonth()
+            for (let i = (currentMonth - 3); i <= currentMonth; i++) {
+                if (i < 0) {
+                    list.push({
+                        month: i + 12,
+                        year: year - 1
+                    })
+                } else {
+                    list.push({
+                        month: i,
+                        year: year
+                    })
+                }
             }
-        }
-        
-        console.log(docList)
 
-    }, [docList])
+            for (let i = 0; i < docList.length; i++) {
+                let innerList = []
+                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${docList[i].name}/${list[0].year}`), where("month", "==", list[0].month));
+                const unsub = onSnapshot(q, (querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        innerList.push(
+                            {
+                                plate: docList[i].name,
+                                month: list[0].month,
+                                total: 0
+                            }
+                        )
+                    } else {
+                        innerList = querySnapshot.docs.map(doc => {
+                            return {
+                                plate: docList[i].name,
+                                month: doc.data().month,
+                                total: doc.data().total
+                            }
+                        })
+                    }
+
+                    setMonth1(prev => [...prev, innerList[0]])
+                })
+            }
+            for (let i = 0; i < docList.length; i++) {
+                let innerList = []
+                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${docList[i].name}/${list[1].year}`), where("month", "==", list[1].month));
+                const unsub = onSnapshot(q, (querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        innerList.push(
+                            {
+                                plate: docList[i].name,
+                                month: list[1].month,
+                                total: 0
+                            }
+                        )
+                    } else {
+                        innerList = querySnapshot.docs.map(doc => {
+                            return {
+                                plate: docList[i].name,
+                                month: doc.data().month,
+                                total: doc.data().total
+                            }
+                        })
+                    }
+
+                    setMonth2(prev => [...prev, innerList[0]])
+                })
+            }
+            for (let i = 0; i < docList.length; i++) {
+                let innerList = []
+                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${docList[i].name}/${list[2].year}`), where("month", "==", list[2].month));
+                const unsub = onSnapshot(q, (querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        innerList.push(
+                            {
+                                plate: docList[i].name,
+                                month: list[2].month,
+                                total: 0
+                            }
+                        )
+                    } else {
+                        innerList = querySnapshot.docs.map(doc => {
+                            return {
+                                plate: docList[i].name,
+                                month: doc.data().month,
+                                total: doc.data().total
+                            }
+                        })
+                    }
+
+                    setMonth3(prev => [...prev, innerList[0]])
+                })
+            }
+            for (let i = 0; i < docList.length; i++) {
+                let innerList = []
+                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${docList[i].name}/${list[3].year}`), where("month", "==", list[3].month));
+                const unsub = onSnapshot(q, (querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        innerList.push(
+                            {
+                                plate: docList[i].name,
+                                month: list[3].month,
+                                total: 0
+                            }
+                        )
+                    } else {
+                        innerList = querySnapshot.docs.map(doc => {
+                            return {
+                                plate: docList[i].name,
+                                month: doc.data().month,
+                                total: doc.data().total
+                            }
+                        })
+                    }
+
+                    setMonth4(prev => [...prev, innerList[0]])
+                })
+            }
+            setLoading(false)
+        }
+
+    }, [docList, currentUser])
+
+    const labels = []
+    const datasets = []
+
+    if (month1.length > 0 && month2.length > 0 && month3.length > 0 && month4.length > 0 && docList.length > 0) {
+        labels.push(MONTHS[month1[0].month])
+        labels.push(MONTHS[month2[0].month])
+        labels.push(MONTHS[month3[0].month])
+        labels.push(MONTHS[month4[0].month])
+        const completeList = month1.concat(month2, month3, month4)
+        for (let i = 0; i < docList.length; i++) {
+            let filtered = []
+            let totalList = []
+            filtered = completeList.filter(obj => {
+                return obj.plate === docList[i].name
+            })
+            totalList = filtered.map(obj => obj.total)
+            datasets.push({
+                label: docList[i].name,
+                data: totalList,
+                backgroundColor: [BAGROUNDCOLOR[i]],
+                borderColor: [BORDERCOLOR[i]],
+                borderWidth: 1
+            })
+        }
+    }
 
     const data = {
-        labels: MONTHS.slice(8),
-        datasets: [{
-            label: 'KAA-123A',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-            ],
-            borderWidth: 1,
-        },
-        {
-            label: 'KAB-123B',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.2)',
-
-            ],
-            borderColor: [
-                'rgb(75, 192, 192)',
-            ],
-            borderWidth: 1,
-        }
-        ]
+        labels: labels,
+        datasets: datasets
     };
     return (
         <>
-            <Chart type='bar' data={data} options={{ scales: { y: { beginAtZero: true } } }} />
+            {
+                loading || loading2 ? <ClipLoader loading={loading} color='#52525b' size={100} /> :
+                    <Chart type='bar' data={data} options={{ scales: { y: { beginAtZero: true } } }} />
+            }
+
         </>
     )
 }
