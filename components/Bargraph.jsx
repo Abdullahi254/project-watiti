@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore'
+import { collection, query, onSnapshot, where } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import {
     Chart as ChartJS,
@@ -253,7 +253,11 @@ function Bargraph({ loading2, docList }) {
         <>
             {
                 loading || loading2 ? <ClipLoader loading={loading} color='#52525b' size={100} /> :
-                    <Chart type='bar' data={data} options={{ scales: { y: { beginAtZero: true } } }} />
+                    <>
+                        <p className='py-1 italic font-semibold text-sm'>Latest Expenses</p>
+                        <Chart type='bar' data={data} options={{ scales: { y: { beginAtZero: true } } }} />
+                    </>
+
             }
 
         </>

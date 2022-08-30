@@ -83,7 +83,11 @@ function Piechart({ loading, docList }) {
         <>
             {
                 loading ? <ClipLoader loading={loading} color='#52525b' size={100} /> :
+                    <>
+                    <p className='py-1 italic font-semibold text-sm'>Total Expenses</p>
                     <Chart type='pie' data={data} />
+                    </>
+                    
             }
 
         </>

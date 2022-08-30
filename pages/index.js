@@ -41,10 +41,10 @@ export default function Home() {
           <div className='xs:col-span-2 md:col-span-1 py-2'>
             <CarsTableCard loading2={loading} docList={docList}/>
           </div>
-          <div className='xs:col-span-2 md:col-span-1 flex justify-center items-center'>
+          <div className='xs:col-span-2 md:col-span-1 flex flex-col justify-center items-center'>
             <Piechart loading={loading} docList={docList}/>
           </div>
-          <div className='xs:col-span-2  md:col-span-1 self-center'>
+          <div className='xs:col-span-2  md:col-span-1 self-center flex flex-col items-center'>
             <Bargraph loading2={loading} docList={docList}/>
           </div>
       </div>
