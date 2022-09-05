@@ -140,16 +140,6 @@ function FuelTable({ numplate }) {
                     ...doc.data()
                 }
             }))
-        })
-
-        return unsub
-    }, [currentUser, numplate, refresh])
-
-    useEffect(() => {
-        setLoading(true)
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/fuel`));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            setLoading(false)
             if (querySnapshot.docs.length > 1) {
                 const initial = 0
                 querySnapshot.docs.forEach((doc) => initial += doc.data().amount)
@@ -163,6 +153,7 @@ function FuelTable({ numplate }) {
 
         return unsub
     }, [currentUser, numplate, refresh])
+
 
     return (
         <div className='my-2 w-full border-2 rounded-lg overflow-x-auto relative bg-white py-6 px-4'>

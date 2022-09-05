@@ -141,16 +141,7 @@ function OtherExpTable({ numplate }) {
                     ...doc.data()
                 }
             }))
-        })
 
-        return unsub
-    }, [currentUser, numplate, refresh])
-
-    useEffect(() => {
-        setLoading(true)
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/others`));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            setLoading(false)
             if (querySnapshot.docs.length > 1) {
                 const initial = 0
                 querySnapshot.docs.forEach((doc) => initial += doc.data().amount)
