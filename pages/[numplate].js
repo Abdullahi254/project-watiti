@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import FuelTable from '../components/FuelTable'
 import ServiceTable from '../components/ServiceTable'
 import OtherExpTable from '../components/OtherExpTable'
+import MaterialTable from '../components/MaterialTable'
 
 function Vehicle() {
   const router = useRouter()
@@ -14,6 +15,7 @@ function Vehicle() {
         <FuelTable numplate={numplate} />
         <ServiceTable numplate={numplate} />
         <OtherExpTable numplate={numplate}/>
+        <MaterialTable numplate={numplate}/>
       </div>
       <div className='h-1/2'/>
     </div>
