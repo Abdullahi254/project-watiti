@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { MdAdd } from 'react-icons/md'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, doc, getDocs, where, serverTimestamp, setDoc, onSnapshot, orderBy, limit, deleteDoc } from 'firebase/firestore'
+import { collection, query, doc, getDocs, where, Timestamp, onSnapshot, orderBy, limit, deleteDoc, addDoc } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertComponent from './AlertComponent'
 
@@ -16,10 +16,12 @@ function FuelTable({ numplate }) {
     const [total, setTotal] = useState(0)
     const [refresh, setRefresh] = useState(false)
     const [latest, setLatest] = useState(true)
+    const [disabled, setDisabled] = useState(true)
 
     const inputRef = useRef()
     const date1Ref = useRef()
     const date2Ref = useRef()
+    const inputDateRef = useRef()
 
     const { currentUser } = useAuth()
 
@@ -34,10 +36,11 @@ function FuelTable({ numplate }) {
         setSuccess()
         setLoading(true)
         try {
-            const event = new Date()
-            await setDoc(doc(db, `users/${currentUser.uid}/vehicles/${numplate}/fuel`, `${event.getTime()}`), {
+            const date = new Date(inputDateRef.current.value)
+            const timestamp = Timestamp.fromDate(date)
+            await addDoc(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/fuel`), {
                 amount: parseInt(inputRef.current.value),
-                date: serverTimestamp(),
+                date: timestamp
             })
             setLoading(false)
             setSuccess('Successfully added fuel expense!')
@@ -51,6 +54,12 @@ function FuelTable({ numplate }) {
     const closeAlertHandler = () => {
         setError()
         setSuccess()
+    }
+
+    const onChangeHandler = () => {
+        if (inputDateRef.current.value && inputRef.current.value) {
+            setDisabled(false)
+        } else setDisabled(true)
     }
 
     const handleDel = async (name) => {
@@ -202,7 +211,7 @@ function FuelTable({ numplate }) {
                                     <td className="py-4 px-6">
                                         {
                                             val.date &&
-                                            new Date(val.date.toDate().toString()).toLocaleString('en-GB')
+                                            new Date(val.date.toDate().toString()).toDateString()
                                         }
                                     </td>
                                     <td className="py-4 px-6">
@@ -231,10 +240,11 @@ function FuelTable({ numplate }) {
                 showButton ? <div className='w-full my-2'>
                     <MdAdd className=' mx-auto text-3xl cursor-pointer text-gray-600' onClick={handleAddForm} />
                 </div> :
-                    <form className="w-full max-w-[300px] mx-auto py-2" onSubmit={addFuelExpenseHandler}>
-                        <div className="flex items-center border-b border-gray-500 py-2">
-                            <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Amount (KSH)" ref={inputRef} />
-                            <button className=" uppercase border-transparent disabled:bg-gray-300  flex-shrink-0 bg-gray-600 hover:bg-gray-900 border-gray-500  text-sm  text-white py-1 px-2 rounded" type="submit" >
+                    <form className="w-full max-w-[400px] mx-auto py-2 flex-wrap" onSubmit={addFuelExpenseHandler}>
+                        <div className="flex items-center  border-b border-gray-500 py-2">
+                            <input name='amount' className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Amount (KSH)" ref={inputRef} onChange={onChangeHandler} />
+                            <input name='date' className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="date" ref={inputDateRef} onChange={onChangeHandler} />
+                            <button className=" uppercase border-transparent disabled:bg-gray-300  flex-shrink-0 bg-gray-600 hover:bg-gray-900 border-gray-500  text-sm  text-white py-1 px-2 rounded" type="submit" disabled={disabled} >
                                 Add
                             </button>
                             <button className="flex-shrink-0 border-transparent border-2 text-red-400 hover:text-red-700 text-sm py-1 px-2 rounded" type="button" onClick={handleAddForm}>
