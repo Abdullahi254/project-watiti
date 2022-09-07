@@ -141,12 +141,20 @@ function MaterialTable({ numplate }) {
                     ...doc.data()
                 }
             }))
-            
+        })
+
+        return unsub
+    }, [currentUser, numplate, refresh])
+
+    useEffect(() => {
+        setLoading(true)
+        setLatest(true)
+        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/materials`), orderBy("date", "desc"));
+        const unsub = onSnapshot(q, (querySnapshot) => {
+            setLoading(false)
             if (querySnapshot.docs.length > 1) {
                 const initial = 0
-                console.log(initial)
-                querySnapshot.docs.forEach((doc) => initial += parseFloat(doc.data().amount))
-                console.log(initial)
+                querySnapshot.docs.forEach((doc) => initial += doc.data().amount)
                 setTotal(initial)
             } else if (querySnapshot.docs.length === 1) {
                 setTotal(querySnapshot.docs[0].data().amount)

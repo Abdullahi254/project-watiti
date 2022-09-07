@@ -26,9 +26,9 @@ exports.addFuelExpense = functions.firestore
           update({
             total: FieldValue.increment(amount),
           }).then(() => {
-            console.log("Fuel document successfully updated!");
+            console.log("Fuel expense successfully added!");
           }).catch((er) => {
-            console.log("Error updating fuel document", er);
+            console.log("Error adding fuel expense", er);
           });
     });
 
@@ -43,9 +43,9 @@ exports.delFuelExpense = functions.firestore
           update({
             total: FieldValue.increment(-amount),
           }).then(() => {
-            console.log("Fuel document successfully updated!");
+            console.log("Fuel expense successfully deleted!");
           }).catch((er) => {
-            console.log("Error updating fuel document", er);
+            console.log("Error deleting fuel expense", er);
           });
     });
 
@@ -60,9 +60,9 @@ exports.addServiceExpense = functions.firestore
           update({
             total: FieldValue.increment(amount),
           }).then(() => {
-            console.log("Service document successfully updated!");
+            console.log("Service expense successfully added!");
           }).catch((er) => {
-            console.log("Error updating service document", er);
+            console.log("Error adding service expense", er);
           });
     });
 
@@ -77,9 +77,9 @@ exports.delServiceExpense = functions.firestore
           update({
             total: FieldValue.increment(-amount),
           }).then(() => {
-            console.log("Service document successfully updated!");
+            console.log("Service expense successfully deleted!");
           }).catch((er) => {
-            console.log("Error updating service document", er);
+            console.log("Error deleting service expense", er);
           });
     });
 
@@ -94,9 +94,9 @@ exports.addOtherExpense = functions.firestore
           update({
             total: FieldValue.increment(amount),
           }).then(() => {
-            console.log("Other Expenses document successfully updated!");
+            console.log("Other Expense successfully added!");
           }).catch((er) => {
-            console.log("Error updating other services document", er);
+            console.log("Error adding other expense", er);
           });
     });
 
@@ -111,144 +111,190 @@ exports.delOtherExpense = functions.firestore
           update({
             total: FieldValue.increment(-amount),
           }).then(() => {
-            console.log("Other Expenses document successfully updated!");
+            console.log("Other expense successfully deleted!");
           }).catch((er) => {
-            console.log("Error updating other services document", er);
+            console.log("Error deleting other expense", er);
+          });
+    });
+
+exports.addLabourExpense = functions.firestore
+    .document("/users/{userId}/vehicles/{numplate}/labour/{docId}")
+    .onCreate((snap, context) => {
+      const amount = snap.data().amount;
+      return db.collection("users").
+          doc(context.params.userId).
+          collection("vehicles").
+          doc(context.params.numplate).
+          update({
+            total: FieldValue.increment(amount),
+          }).then(() => {
+            console.log("Labour expense successfully added!");
+          }).catch((er) => {
+            console.log("Error adding labour expense", er);
+          });
+    });
+
+exports.delLabourExpense = functions.firestore
+    .document("/users/{userId}/vehicles/{numplate}/labour/{docId}")
+    .onDelete((snap, context) => {
+      const amount = snap.data().amount;
+      return db.collection("users").
+          doc(context.params.userId).
+          collection("vehicles").
+          doc(context.params.numplate).
+          update({
+            total: FieldValue.increment(-amount),
+          }).then(() => {
+            console.log("labour expense successfully deleted!");
+          }).catch((er) => {
+            console.log("Error deleting labour expense", er);
           });
     });
 
 exports.sumToTotalMonthExpense = functions.firestore
     .document("/users/{userId}/vehicles/{numplate}/{expense}/{docId}")
     .onCreate((snap, context) => {
-      const amount = snap.data().amount;
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const docRef = db.collection("users").
-          doc(context.params.userId).
-          collection("vehicles").
-          doc("totalMonthly").
-          collection(`${year}`).
-          doc(`${month}`);
-      return docRef.get().then((doc)=>{
-        if (doc.exists) {
-          return docRef.update({
-            month: month,
-            year: year,
-            total: FieldValue.increment(amount),
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully updated!`);
-          }).catch((er) => {
-            console.log(`Error updating data for month ${month}, year ${year}
-             document`, er);
-          });
-        } else {
-          return docRef.set({
-            month: month,
-            year: year,
-            total: amount,
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully created!`);
-          }).catch((er) => {
-            console.log(`Error adding data for month ${month}, year ${year}
-             document`, er);
-          });
-        }
-      }).catch(()=>{
-        console.log("error getting data");
-      });
+      if (context.params.expense !== "materials") {
+        const amount = snap.data().amount;
+        const date = new Date(snap.data().date.toDate().toString());
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const docRef = db.collection("users").
+            doc(context.params.userId).
+            collection("vehicles").
+            doc("totalMonthly").
+            collection(`${year}`).
+            doc(`${month}`);
+        return docRef.get().then((doc)=>{
+          if (doc.exists) {
+            return docRef.update({
+              month: month,
+              year: year,
+              total: FieldValue.increment(amount),
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              document successfully updated!`);
+            }).catch((er) => {
+              console.log(`Error updating data for month ${month}, year ${year}
+               document`, er);
+            });
+          } else {
+            return docRef.set({
+              month: month,
+              year: year,
+              total: amount,
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              document successfully created!`);
+            }).catch((er) => {
+              console.log(`Error adding data for month ${month}, year ${year}
+               document`, er);
+            });
+          }
+        }).catch(()=>{
+          console.log("error getting data");
+        });
+      } else {
+        console.log("added material document");
+      }
     });
 
 exports.subFromTotalMonthExpense = functions.firestore
     .document("/users/{userId}/vehicles/{numplate}/{expense}/{docId}")
     .onDelete((snap, context) => {
-      const amount = snap.data().amount;
-      const date = new Date(snap.data().date.toDate().toString());
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      return db.collection("users").
-          doc(context.params.userId).
-          collection("vehicles").
-          doc("totalMonthly").
-          collection(`${year}`).
-          doc(`${month}`).
-          update({
-            total: FieldValue.increment(-amount),
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully deleted!`);
-          }).catch((er) => {
-            console.log(`Error deleting month ${month}, year ${year}
-             document`, er);
-          });
+      if (context.params.expense !== "materials") {
+        const amount = snap.data().amount;
+        const date = new Date(snap.data().date.toDate().toString());
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        return db.collection("users").
+            doc(context.params.userId).
+            collection("vehicles").
+            doc("totalMonthly").
+            collection(`${year}`).
+            doc(`${month}`).
+            update({
+              total: FieldValue.increment(-amount),
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              expense successfully subtructed!`);
+            }).catch((er) => {
+              console.log(`Error subtructing month ${month}, year ${year}
+               expense`, er);
+            });
+      }
     });
 
 exports.sumToTotalCarMonthExpense = functions.firestore
     .document("/users/{userId}/vehicles/{numplate}/{expense}/{docId}")
     .onCreate((snap, context) => {
-      const amount = snap.data().amount;
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const docRef = db.collection("users").
-          doc(context.params.userId).
-          collection("vehicles").
-          doc(context.params.numplate).
-          collection(`${year}`).
-          doc(`${month}`);
-      return docRef.get().then((doc)=>{
-        if (doc.exists) {
-          return docRef.update({
-            month: month,
-            year: year,
-            total: FieldValue.increment(amount),
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully updated!`);
-          }).catch((er) => {
-            console.log(`Error updating data for month ${month}, year ${year}
-             document`, er);
-          });
-        } else {
-          return docRef.set({
-            month: month,
-            year: year,
-            total: amount,
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully created!`);
-          }).catch((er) => {
-            console.log(`Error adding data for month ${month}, year ${year}
-             document`, er);
-          });
-        }
-      }).catch(()=>{
-        console.log("error getting data");
-      });
+      if (context.params.expense !== "materials") {
+        const amount = snap.data().amount;
+        const date = new Date(snap.data().date.toDate().toString());
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const docRef = db.collection("users").
+            doc(context.params.userId).
+            collection("vehicles").
+            doc(context.params.numplate).
+            collection(`${year}`).
+            doc(`${month}`);
+        return docRef.get().then((doc)=>{
+          if (doc.exists) {
+            return docRef.update({
+              month: month,
+              year: year,
+              total: FieldValue.increment(amount),
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              document successfully updated!`);
+            }).catch((er) => {
+              console.log(`Error updating data for month ${month}, year ${year}
+               document`, er);
+            });
+          } else {
+            return docRef.set({
+              month: month,
+              year: year,
+              total: amount,
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              document successfully created!`);
+            }).catch((er) => {
+              console.log(`Error adding data for month ${month}, year ${year}
+               document`, er);
+            });
+          }
+        }).catch(()=>{
+          console.log("error getting data");
+        });
+      } else {
+        console.log("added material document");
+      }
     });
 
 exports.subFromTotalCarMonthExpense = functions.firestore
     .document("/users/{userId}/vehicles/{numplate}/{expense}/{docId}")
     .onDelete((snap, context) => {
-      const amount = snap.data().amount;
-      const date = new Date(snap.data().date.toDate().toString());
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      return db.collection("users").
-          doc(context.params.userId).
-          collection("vehicles").
-          doc(context.params.numplate).
-          collection(`${year}`).
-          doc(`${month}`).
-          update({
-            total: FieldValue.increment(-amount),
-          }).then(() => {
-            console.log(`month ${month}, year ${year} 
-            document successfully deleted!`);
-          }).catch((er) => {
-            console.log(`Error deleting month ${month}, year ${year}
-             document`, er);
-          });
+      if (context.params.expense !== "materials") {
+        const amount = snap.data().amount;
+        const date = new Date(snap.data().date.toDate().toString());
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        return db.collection("users").
+            doc(context.params.userId).
+            collection("vehicles").
+            doc(context.params.numplate).
+            collection(`${year}`).
+            doc(`${month}`).
+            update({
+              total: FieldValue.increment(-amount),
+            }).then(() => {
+              console.log(`month ${month}, year ${year} 
+              expense successfully subtructed!`);
+            }).catch((er) => {
+              console.log(`Error subtructing month ${month}, year ${year}
+               expense`, er);
+            });
+      }
     });

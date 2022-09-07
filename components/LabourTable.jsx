@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import { MdAdd } from 'react-icons/md'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { collection, query, doc, getDocs, where, onSnapshot, orderBy, limit, deleteDoc, addDoc, Timestamp } from 'firebase/firestore'
+import { collection, query, doc, getDocs, where, Timestamp, onSnapshot, orderBy, limit, deleteDoc, addDoc } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertComponent from './AlertComponent'
 
-function OtherExpTable({ numplate }) {
+function LabourTable({ numplate }) {
 
     const [showButton, setShowButton] = useState(true)
     const [error, setError] = useState()
@@ -30,7 +30,7 @@ function OtherExpTable({ numplate }) {
     }
 
 
-    const addOtherExpenseHandler = async (e) => {
+    const addLabourExpenseHandler = async (e) => {
         e.preventDefault()
         setError()
         setSuccess()
@@ -38,16 +38,16 @@ function OtherExpTable({ numplate }) {
         try {
             const date = new Date(inputDateRef.current.value)
             const timestamp = Timestamp.fromDate(date)
-            await addDoc(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/others`), {
+            await addDoc(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/labour`), {
                 amount: parseInt(inputRef.current.value),
-                date: timestamp,
+                date: timestamp
             })
             setLoading(false)
-            setSuccess('Successfully added expense!')
+            setSuccess('Successfully added labour expense!')
         } catch (er) {
             setLoading(false)
             console.log(er)
-            setError('Error adding expense input!')
+            setError('Error adding labour expense input!')
         }
     }
 
@@ -62,7 +62,6 @@ function OtherExpTable({ numplate }) {
         } else setDisabled(true)
     }
 
-
     const handleDel = async (name) => {
         setError()
         setSuccess()
@@ -70,7 +69,7 @@ function OtherExpTable({ numplate }) {
         try {
             const text = "Are you sure you want to delete entry"
             if (confirm(text) == true) {
-                await deleteDoc(doc(db, `users/${currentUser.uid}/vehicles/${numplate}/others`, `${name}`))
+                await deleteDoc(doc(db, `users/${currentUser.uid}/vehicles/${numplate}/labour`, `${name}`))
                 setLoading(false)
                 setSuccess('Successfully deleted entry!')
             }
@@ -97,7 +96,7 @@ function OtherExpTable({ numplate }) {
                 const date2 = new Date(date2Ref.current.value)
                 date1.setHours(0, 0, 0, 0)
                 date2.setHours(23, 59, 59)
-                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/others`),
+                const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/labour`),
                     where("date", ">=", date1), where("date", "<=", date2))
                 const querySnapshot = await getDocs(q)
                 setLoading(false)
@@ -132,7 +131,7 @@ function OtherExpTable({ numplate }) {
     useEffect(() => {
         setLoading(true)
         setLatest(true)
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/others`), orderBy("date", "desc"), limit(5));
+        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/labour`), orderBy("date", "desc"), limit(5));
         const unsub = onSnapshot(q, (querySnapshot) => {
             setLoading(false)
             setDocList(querySnapshot.docs.map(doc => {
@@ -142,13 +141,15 @@ function OtherExpTable({ numplate }) {
                 }
             }))
         })
+
         return unsub
     }, [currentUser, numplate, refresh])
 
+   
     useEffect(() => {
         setLoading(true)
         setLatest(true)
-        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/others`), orderBy("date", "desc"));
+        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${numplate}/labour`), orderBy("date", "desc"));
         const unsub = onSnapshot(q, (querySnapshot) => {
             setLoading(false)
             if (querySnapshot.docs.length > 1) {
@@ -161,20 +162,18 @@ function OtherExpTable({ numplate }) {
                 setTotal(0)
             }
         })
-
         return unsub
     }, [currentUser, numplate, refresh])
 
-
     return (
-        <div className='my-2 w-full border-2 rounded-lg overflow-x-auto relative bg-white py-8 px-4'>
-            <h2 className='xs:text-2xl md:text-3xl mb-2 uppercase'>other expenses ({numplate})</h2>
+        <div className='my-2 w-full border-2 rounded-lg overflow-x-auto relative bg-white py-6 px-4'>
+            <h2 className='xs:text-2xl md:text-3xl mb-1 uppercase'>Labour Expense ({numplate})</h2>
             <div className='px-2 w-full flex flex-col justify-center items-center py-1'>
                 <ClipLoader loading={loading} color='#52525b' size={50} />
                 <AlertComponent error={error} close={closeAlertHandler} />
                 <AlertComponent success={success} close={closeAlertHandler} />
             </div>
-            <div className='w-full flex justify-end mb-2 px-6 py-4'>
+            <div className='w-full flex justify-end mb-2 px-6 py-2'>
                 <input type="date" ref={date1Ref} onChange={handleSearch} />
                 <span className="mx-4 text-gray-500 font-bold">to</span>
                 <input type="date" ref={date2Ref} onChange={handleSearch} />
@@ -242,9 +241,9 @@ function OtherExpTable({ numplate }) {
                 showButton ? <div className='w-full my-2'>
                     <MdAdd className=' mx-auto text-3xl cursor-pointer text-gray-600' onClick={handleAddForm} />
                 </div> :
-                    <form className="w-full max-w-[400px] mx-auto py-2 flex-wrap" onSubmit={addOtherExpenseHandler}>
+                    <form className="w-full max-w-[400px] mx-auto py-2 flex-wrap" onSubmit={addLabourExpenseHandler}>
                         <div className="flex items-center  border-b border-gray-500 py-2">
-                            <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Amount (KSH)" ref={inputRef} onChange={onChangeHandler} />
+                            <input name='amount' className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Amount (KSH)" ref={inputRef} onChange={onChangeHandler} />
                             <input name='date' className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="date" ref={inputDateRef} onChange={onChangeHandler} />
                             <button className=" uppercase border-transparent disabled:bg-gray-300  flex-shrink-0 bg-gray-600 hover:bg-gray-900 border-gray-500  text-sm  text-white py-1 px-2 rounded" type="submit" disabled={disabled} >
                                 Add
@@ -259,4 +258,4 @@ function OtherExpTable({ numplate }) {
     )
 }
 
-export default OtherExpTable
+export default LabourTable
