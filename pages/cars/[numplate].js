@@ -1,10 +1,10 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import FuelTable from '../components/FuelTable'
-import ServiceTable from '../components/ServiceTable'
-import OtherExpTable from '../components/OtherExpTable'
-import MaterialTable from '../components/MaterialTable'
-import LabourTable from '../components/LabourTable'
+import FuelTable from '../../components/FuelTable'
+import ServiceTable from '../../components/ServiceTable'
+import OtherExpTable from '../../components/OtherExpTable'
+import MaterialTable from '../../components/MaterialTable'
+import LabourTable from '../../components/LabourTable'
 
 function Vehicle() {
   const router = useRouter()

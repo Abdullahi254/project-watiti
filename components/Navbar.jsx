@@ -64,7 +64,7 @@ function Navbar() {
             </Link>
             {docList.length > 0 && docList.map((val, index) => {
               return (
-                <Link href={`${val.name}`} key={index}>
+                <Link href={`/cars/${val.name}`} key={index}>
                   <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'
                     style={{
                       borderBottom: router.query.numplate == val.name && "solid 2px #4b5563"
@@ -112,7 +112,7 @@ function Navbar() {
                 {
                   docList.length > 0 && docList.map((val, index) => {
                     return (
-                      <Link href={`${val.name}`} key={index}>
+                      <Link href={`/cars/${val.name}`} key={index}>
                         <li className='py-4 text-sm hover:border-b-2 border-gray-600' onClick={handleNav}>{val.name}</li>
                       </Link>
                     )
