@@ -67,9 +67,9 @@ function Login() {
             <button className="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
               Login
             </button>
-            <span className=' text-blue-600 underline'>
+            {/* <span className=' text-blue-600 underline'>
               <Link href="/signup">Signup</Link>
-            </span>
+            </span> */}
           </div>
         </form>
       </div>
