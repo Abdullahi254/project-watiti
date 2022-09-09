@@ -11,7 +11,7 @@ import { collection, query, onSnapshot } from 'firebase/firestore'
 
 function Navbar() {
 
-  const { currentUser } = useAuth()
+  const { currentUser, logout } = useAuth()
 
   const router = useRouter()
 
@@ -21,6 +21,14 @@ function Navbar() {
 
   const handleNav = () => {
     setsideNav(prev => !prev)
+  }
+
+  const handleLogout = () => {
+    logout().then(res => {
+      console.log("successfully logged out user", res)
+    }).catch(er => {
+      console.log("error logging out", er)
+    })
   }
 
   useEffect(() => {
@@ -59,7 +67,7 @@ function Navbar() {
                 style={{
                   borderBottom: router.pathname == "/" && "solid 2px #4b5563"
                 }}>
-                Home
+                {currentUser && "Home"}
               </li>
             </Link>
             {docList.length > 0 && docList.map((val, index) => {
@@ -72,9 +80,10 @@ function Navbar() {
                 </Link>
               )
             })}
-            <Link href="/#contact">
-              <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'>Contact</li>
-            </Link>
+            {
+              currentUser && <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600 text-red-500' onClick={handleLogout}>Logout</li>
+            }
+
           </ul>
           <div className='md:hidden cursor-pointer' onClick={handleNav}>
             <AiOutlineMenu size={25} />
@@ -106,7 +115,7 @@ function Navbar() {
                     borderBottom: router.pathname == "/" && "solid 2px #4b5563"
                   }}
                     onClick={handleNav}>
-                    Home
+                    {currentUser && "HOME"}
                   </li>
                 </Link>
                 {
@@ -117,6 +126,9 @@ function Navbar() {
                       </Link>
                     )
                   })
+                }
+                {
+                  currentUser && <li className='py-4 text-sm hover:border-b-2 border-gray-600 text-red-500' onClick={handleLogout}>Logout</li>
                 }
               </ul>
             </div>

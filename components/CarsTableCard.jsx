@@ -78,7 +78,7 @@ function CarsTableCard({loading2, docList}) {
 
     
     return (
-        <div className=' border-2 rounded-lg overflow-x-auto relative bg-white py-10'>
+        <div className=' border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2'>
 
             <div className='px-2 w-full flex flex-col justify-center items-center'>
                 <ClipLoader loading={loading||loading2} color='#52525b' size={50} />

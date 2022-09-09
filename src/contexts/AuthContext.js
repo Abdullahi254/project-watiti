@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from '../firebase/firebase'
 import ClipLoader from "react-spinners/ClipLoader";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 export const AuthContext = React.createContext()
 
 export function useAuth() {
@@ -16,6 +16,9 @@ export function AuthProvider({ children }) {
     }
     function login(email, password) {
         return signInWithEmailAndPassword(auth, email, password)
+    }
+    function logout(){
+        return signOut(auth)
     }
 
 
@@ -52,6 +55,7 @@ export function AuthProvider({ children }) {
         currentUser,
         signUp,
         login,
+        logout,
     }
     return (
         <AuthContext.Provider value={value}>

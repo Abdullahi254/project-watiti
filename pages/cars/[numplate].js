@@ -15,7 +15,6 @@ function Vehicle() {
       <div className=' max-w-[1000px] mx-auto text-center'>
         <FuelTable numplate={numplate} />
         <ServiceTable numplate={numplate} />
-        <OtherExpTable numplate={numplate}/>
         <LabourTable numplate={numplate}/>
         <MaterialTable numplate={numplate}/>
       </div>
