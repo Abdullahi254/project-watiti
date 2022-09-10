@@ -159,7 +159,7 @@ function MaterialTable({ numplate }) {
             setLoading(false)
             if (querySnapshot.docs.length > 1) {
                 const initial = 0
-                querySnapshot.docs.forEach((doc) => initial += doc.data().amount)
+                querySnapshot.docs.forEach((doc) => initial += parseFloat(doc.data().amount))
                 setTotal(initial)
             } else if (querySnapshot.docs.length === 1) {
                 setTotal(querySnapshot.docs[0].data().amount)

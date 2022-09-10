@@ -36,9 +36,6 @@ export default function Home() {
 
       <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 md:grid-cols-2 px-6 py-4 gap-2 '>
         <div className='h-[50px] xs:col-span-1 md:col-span-2' />
-        <div className='xs:col-span-2 text-center'>
-          <h3 className='py-4 px-6 text-gray-700 italic font-medium'> Account: {currentUser && currentUser.email}</h3>
-        </div>
         <div className='xs:col-span-2 md:col-span-1 py-2 flex flex-col justify-center items-center self-center'>
           <CarsTableCard loading2={loading} docList={docList} />
           <Piechart loading={loading} docList={docList} />

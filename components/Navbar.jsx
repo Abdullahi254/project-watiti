@@ -57,11 +57,12 @@ function Navbar() {
       <div className='flex justify-between items-center w-full h-full px-2 md:px-4 lg:px-8 2xl:px-16'>
         <Link href="/">
           <div className='cursor-pointer h-full flex flex-col justify-center '>
-            <Image src={logo} alt="Abdullah logo" width="100" />
+            <Image src={logo} alt="Watiti logo" width="100" />
           </div>
         </Link>
         <div>
           <ul className='hidden md:flex'>
+          <li className='ml-10 text-sm italic'>Account: {currentUser && currentUser.email}</li>
             <Link href="/">
               <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'
                 style={{
@@ -106,7 +107,7 @@ function Navbar() {
               </div>
             </div>
             <div className='border-b-2  border-gray-400 my-4 text-center'>
-              <p className='w-[85%] md:w-[90%] py-4'>Where all your contruction experts are.</p>
+              <p className='w-[85%] md:w-[90%] py-4 italic'>Account: {currentUser && currentUser.email}</p>
             </div>
             <div className='py-4 flex flex-col'>
               <ul className='uppercase'>
