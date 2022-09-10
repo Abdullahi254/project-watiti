@@ -34,7 +34,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 md:grid-cols-2 px-6 py-4 gap-2 '>
+      <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 md:grid-cols-2 px-6 py-4 gap-3 '>
         <div className='h-[50px] xs:col-span-1 md:col-span-2' />
         <div className='xs:col-span-2 md:col-span-1 py-2 flex flex-col justify-center items-center self-center'>
           <CarsTableCard loading2={loading} docList={docList} />

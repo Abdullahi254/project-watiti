@@ -78,14 +78,13 @@ function CarsTableCard({loading2, docList}) {
 
     
     return (
-        <div className=' border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2'>
-
+        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2'>
             <div className='px-2 w-full flex flex-col justify-center items-center'>
                 <ClipLoader loading={loading||loading2} color='#52525b' size={50} />
                 <AlertComponent error={error} close={closeAlertHandler} />
                 <AlertComponent success={success} close={closeAlertHandler} />
             </div>
-
+            <span className='text-xs italic font-medium px-6'>Account: {currentUser && currentUser.email}</span>
             <h2 className='py-4 px-6 xs:text-2xl md:text-3xl'>List of Vehicles</h2>
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

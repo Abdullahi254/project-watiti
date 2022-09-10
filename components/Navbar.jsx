@@ -61,8 +61,7 @@ function Navbar() {
           </div>
         </Link>
         <div>
-          <ul className='hidden md:flex'>
-          <li className='ml-10 text-sm italic'>Account: {currentUser && currentUser.email}</li>
+          <ul className='hidden md:flex items-center'>
             <Link href="/">
               <li className='ml-10 text-sm uppercase hover:border-b-2 border-gray-600'
                 style={{
