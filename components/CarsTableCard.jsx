@@ -2,20 +2,70 @@ import React, { useState, useRef, useEffect } from 'react'
 import { MdAdd } from 'react-icons/md'
 import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
-import { doc, setDoc, deleteDoc } from 'firebase/firestore'
+import { doc, setDoc, deleteDoc, Timestamp, query, collection, where, getDocs } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertComponent from './AlertComponent'
 
-function CarsTableCard({loading2, docList}) {
+function CarsTableCard({ loading2, docList }) {
     const { currentUser } = useAuth()
 
     const inputRef = useRef()
+    const dateRef = useRef()
 
     const [success, setSuccess] = useState()
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
     const [disabled, setDisabled] = useState(true)
     const [showButton, setShowButton] = useState(true)
+    const [search, setSearch] = useState(false)
+    const [total, setTotal] = useState([])
+
+    const handleSearch = async () => {
+        setError()
+        try {
+            if (dateRef.current.value.length > 0 && docList) {
+                setSearch(true)
+                setLoading(true)
+                const date = new Date(dateRef.current.value)
+                const timestamp = Timestamp.fromDate(date)
+                const list = ["fuel", "service", "labour"]
+                let totalList = []
+                for (let i = 0; i < docList.length; i++) {
+                    let total = 0
+                    for (let j = 0; j < list.length; j++) {
+                        let innerTotal = 0
+                        const q = query(collection(db, `users/${currentUser.uid}/vehicles/${docList[i].name}/${list[j]}`),
+                            where("date", "==", timestamp))
+                        const querySnapshot = await getDocs(q)
+                        if (querySnapshot.docs.length > 1) {
+                            querySnapshot.docs.forEach((doc) => innerTotal += doc.data().amount)
+                            total += innerTotal
+                        } else if (querySnapshot.docs.length === 1) {
+                            innerTotal += querySnapshot.docs[0].data().amount
+                        } else {
+                            total += 0
+                        }
+                    }
+                    totalList.push({
+                        name: docList[i].name,
+                        date: new Date(timestamp.toDate().toString()).toDateString(),
+                        total: total
+                    })
+                }
+                setTotal(totalList)
+                setLoading(false)
+            }
+            else {
+                setSearch(false)
+            }
+        } catch (er) {
+            setLoading(false)
+            setError("Error fetching data!")
+            console.log(er)
+        }
+
+
+    }
 
     const handleAddForm = () => {
         setShowButton(prev => !prev)
@@ -76,16 +126,19 @@ function CarsTableCard({loading2, docList}) {
         setSuccess()
     }
 
-    
+
     return (
         <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2'>
             <div className='px-2 w-full flex flex-col justify-center items-center'>
-                <ClipLoader loading={loading||loading2} color='#52525b' size={50} />
+                <ClipLoader loading={loading || loading2} color='#52525b' size={50} />
                 <AlertComponent error={error} close={closeAlertHandler} />
                 <AlertComponent success={success} close={closeAlertHandler} />
             </div>
             <span className='text-xs italic font-medium px-6'>Account: {currentUser && currentUser.email}</span>
-            <h2 className='py-4 px-6 xs:text-2xl md:text-3xl'>List of Vehicles</h2>
+            <div className='w-full py-4 px-6 flex justify-between '>
+                <h2 className='xs:text-2xl md:text-3xl'>List of Vehicles</h2>
+                <input type="date" ref={dateRef} onChange={handleSearch} />
+            </div>
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -93,10 +146,10 @@ function CarsTableCard({loading2, docList}) {
                             Plate Number
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Date Added
+                            {search ? "Searched Date" : "Date Added"}
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Total Expense
+                            {search ? "Total" : "Grand Total"}
                         </th>
                         <th scope="col" className="py-3 px-6">
                             Action
@@ -104,7 +157,24 @@ function CarsTableCard({loading2, docList}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {
+                    {search ? total.map((val, index) => {
+                        return (
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                                <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase">
+                                    {val.name}
+                                </th>
+                                <td className="py-4 px-6">
+                                    {val.date}
+                                </td>
+                                <td className="py-4 px-6">
+                                    KSH {val.total.toFixed(2)}
+                                </td>
+                                <td className="py-4 px-6">
+                                    <button className='border-transparent text-red-400 hover:text-red-700 text-sm py-1 px-2 rounded' onClick={() => handleDel(val.name)}>Delete</button>
+                                </td>
+                            </tr>
+                        )
+                    }) :
                         docList.length > 0 && docList.map((val, index) => {
                             return (
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
