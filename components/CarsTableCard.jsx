@@ -42,6 +42,7 @@ function CarsTableCard({ loading2, docList }) {
                             total += innerTotal
                         } else if (querySnapshot.docs.length === 1) {
                             innerTotal += querySnapshot.docs[0].data().amount
+                            total +=innerTotal
                         } else {
                             total += 0
                         }
