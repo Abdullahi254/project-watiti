@@ -72,7 +72,8 @@ function CarsTableCard({ loading2, docList }) {
         setShowButton(prev => !prev)
     }
     const handleDisableButton = () => {
-        if (inputRef.current.value.length > 3) {
+        const plateName = inputRef.current.value.trim().toLowerCase()
+        if (plateName.length > 3) {
             setDisabled(false)
         } else {
             setDisabled(true)
@@ -100,25 +101,27 @@ function CarsTableCard({ loading2, docList }) {
     }
 
     const handleDel = async (name) => {
-        setError()
-        setSuccess()
-        setLoading(true)
-        try {
-            const text = "Are you sure you want to delete Vehicle?"
-            if (confirm(text) == true) {
-                await deleteDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${name}`))
-                setLoading(false)
-                setSuccess('Successfully deleted vehicle!')
-            }
-            else {
-                setLoading(false)
-                return
-            }
-        } catch (er) {
-            setLoading(false)
-            console.log(er)
-            setError('Error deleting vehicle!')
-        }
+        // setError()
+        // setSuccess()
+        // setLoading(true)
+        // try {
+        //     const text = "Are you sure you want to delete Vehicle?"
+        //     if (confirm(text) == true) {
+        //         await deleteDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${name}`))
+        //         setLoading(false)
+        //         setSuccess('Successfully deleted vehicle!')
+        //     }
+        //     else {
+        //         setLoading(false)
+        //         return
+        //     }
+        // } catch (er) {
+        //     setLoading(false)
+        //     console.log(er)
+        //     setError('Error deleting vehicle!')
+        // }
+        const text = "Contact Admin to perform task!"
+        confirm(text)
 
     }
 
