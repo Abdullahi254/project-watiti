@@ -86,8 +86,9 @@ function CarsTableCard({ loading2, docList }) {
         setLoading(true)
         try {
             const event = new Date()
-            await setDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${inputRef.current.value}`), {
-                name: inputRef.current.value,
+            const plateName = inputRef.current.value.trim().toLowerCase()
+            await setDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${plateName}`), {
+                name: plateName,
                 date: event.toLocaleString('en-GB'),
                 total: 0
             })
