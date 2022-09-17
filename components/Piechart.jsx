@@ -72,7 +72,10 @@ function Piechart({ loading, docList }) {
                 'rgba(75, 192, 192)',
                 'rgb(255, 205, 86)',
                 'rgb(192,192,192)',
-                'rgb(0,0,0)',
+                'rgb(139,43,235)',
+                'rgb(43,56,235)',
+                'rgb(235,228,43)',
+                'rgb(235,196,43)',
             ],
             hoverOffset: 4,
             radius: '60%'
