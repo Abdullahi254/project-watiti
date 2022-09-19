@@ -46,10 +46,16 @@ function FuelTable({ numplate }) {
             })
             setLoading(false)
             setSuccess('Successfully added fuel expense!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         } catch (er) {
             setLoading(false)
             console.log(er)
             setError('Error adding fuel expense input!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         }
     }
 

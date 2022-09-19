@@ -46,10 +46,16 @@ function LabourTable({ numplate }) {
             })
             setLoading(false)
             setSuccess('Successfully added labour expense!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         } catch (er) {
             setLoading(false)
             console.log(er)
             setError('Error adding labour expense input!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         }
     }
 

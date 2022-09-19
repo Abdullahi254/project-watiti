@@ -45,10 +45,16 @@ function MaterialTable({ numplate }) {
             })
             setLoading(false)
             setSuccess('Successfully added tonnes transported!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         } catch (er) {
             setLoading(false)
             console.log(er)
             setError('Error adding service expense input!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            setDisabled(true)
         }
     }
 

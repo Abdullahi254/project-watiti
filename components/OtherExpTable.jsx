@@ -48,10 +48,18 @@ function OtherExpTable({ numplate }) {
             })
             setLoading(false)
             setSuccess('Successfully added expense!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            commentRef.current.value = ''
+            setDisabled(true)
         } catch (er) {
             setLoading(false)
             console.log(er)
             setError('Error adding expense input!')
+            inputRef.current.value = ''
+            date1Ref.current.value= ''
+            commentRef.current.value = ''
+            setDisabled(true)
         }
     }
 
