@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import Link from 'next/link'
 import { useAuth } from '../src/contexts/AuthContext'
 import { useRouter } from 'next/router'
 import ClipLoader from "react-spinners/ClipLoader";
@@ -31,7 +30,7 @@ function Login() {
   };
 
   return (
-    <div className=' h-screen w-full py-[10%]'>
+    <div className=' h-screen w-full py-[10%] xs:bg-repeat-round sm:bg-no-repeat bg-gray-200  bg-[url(../public/assets/escavatorpng.png)] bg-contain'>
 
       <div className=' flex w-full mt-10 justify-center flex-col items-center'>
         <div className='px-2 w-full flex flex-col justify-center items-center py-4'>
