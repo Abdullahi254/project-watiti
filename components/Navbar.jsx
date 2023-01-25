@@ -53,7 +53,7 @@ function Navbar() {
     window.addEventListener('scroll', handleShadow)
   }, [])
   return (
-    <div className={shadow ? 'fixed w-full h-20 shadow-xl z-[100] bg-white' : ' bg-gray-300 fixed w-full h-20 z-[100] '}>
+    <div className={shadow ? 'fixed w-full h-20 shadow-xl z-[100] bg-white overflow-auto scrollbar-thumb-gray-400 scrollbar-track-white scrollbar-thin' : ' bg-gray-300 fixed w-full h-20 z-[100] overflow-auto scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin'}>
       <div className='flex justify-between items-center w-full h-full px-2 md:px-4 lg:px-8 2xl:px-16'>
         <Link href="/">
           <div className='cursor-pointer h-full flex flex-col justify-center '>
