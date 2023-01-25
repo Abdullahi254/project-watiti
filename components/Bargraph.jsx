@@ -3,6 +3,7 @@ import { useAuth } from '../src/contexts/AuthContext'
 import { db } from '../src/firebase/firebase'
 import { collection, query, onSnapshot, where } from 'firebase/firestore'
 import ClipLoader from "react-spinners/ClipLoader";
+import {bgColors as BAGROUNDCOLOR, borderColors as BORDERCOLOR} from '../public/colors/colors'
 import {
     Chart as ChartJS,
     ArcElement,
@@ -66,28 +67,7 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'September', 'October', 'November', 'December'
 ]
 
-const BAGROUNDCOLOR = [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgb(255, 205, 86, 0.2)',
-    'rgb(192, 192, 192, 0.2)',
-    'rgb(139, 43, 235, 0.2)',
-    'rgb(43, 56, 235, 0.2)',
-    'rgb(235, 228, 43, 0.2)',
-    'rgb(235, 196, 43, 0.2)',
-]
 
-
-const BORDERCOLOR = [
-    'rgba(255, 99, 132)',
-    'rgba(75, 192, 192)',
-    'rgb(255, 205, 86)',
-    'rgb(192, 192, 192)',
-    'rgb(139, 43, 235)',
-    'rgb(43, 56, 235)',
-    'rgb(235, 228, 43)',
-    'rgb(235, 196, 43)',
-]
 
 function Bargraph({ loading2, docList }) {
     const { currentUser } = useAuth()

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {bgColors, borderColors} from '../public/colors/colors'
 import ClipLoader from "react-spinners/ClipLoader";
 import {
     Chart as ChartJS,
@@ -67,16 +67,7 @@ function Piechart({ loading, docList }) {
         datasets: [{
             label: 'Total Monthly Expenses',
             data: docList.map((doc=>doc.total)),
-            backgroundColor: [
-                'rgba(255, 99, 132)',
-                'rgba(75, 192, 192)',
-                'rgb(255, 205, 86)',
-                'rgb(192,192,192)',
-                'rgb(139,43,235)',
-                'rgb(43,56,235)',
-                'rgb(235,228,43)',
-                'rgb(235,196,43)',
-            ],
+            backgroundColor: borderColors,
             hoverOffset: 4,
             radius: '60%'
         }],
