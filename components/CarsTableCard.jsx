@@ -94,11 +94,13 @@ function CarsTableCard({ loading2, docList }) {
             })
             setLoading(false)
             setSuccess('Successfully added a new vehicle!')
+            inputRef.current.value = ''
         } catch (er) {
             setLoading(false)
             console.log(er)
             setError('Error adding a vehicle!')
         }
+        setDisabled(true)
     }
 
     const handleDel = async (name) => {
@@ -133,12 +135,8 @@ function CarsTableCard({ loading2, docList }) {
 
 
     return (
-        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2'>
-            <div className='px-2 w-full flex flex-col justify-center items-center'>
-                <ClipLoader loading={loading || loading2} color='#52525b' size={50} />
-                <AlertComponent error={error} close={closeAlertHandler} />
-                <AlertComponent success={success} close={closeAlertHandler} />
-            </div>
+        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2 max-h-[550px]
+       scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin' id='car-table'>
             <span className='text-xs italic font-medium px-6'>Account: {currentUser && currentUser.email}</span>
             <div className='w-full py-4 px-6 flex justify-between '>
                 <h2 className='xs:text-2xl md:text-3xl'>List of Vehicles</h2>
@@ -202,6 +200,12 @@ function CarsTableCard({ loading2, docList }) {
 
                 </tbody>
             </table>
+
+            <div className='px-2 w-full flex flex-col justify-center items-center my-2'>
+                <ClipLoader loading={loading || loading2} color='#52525b' size={50} />
+                <AlertComponent error={error} close={closeAlertHandler} />
+                <AlertComponent success={success} close={closeAlertHandler} />
+            </div>
 
             <div className='w-full border-2' />
 
