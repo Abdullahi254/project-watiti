@@ -27,21 +27,21 @@ export default function Home() {
   }, [currentUser])
 
   return (
-    <div className='h-screen w-full'>
+    <div className='h-screen w-full scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin'>
       <Head>
         <title>Watiti books</title>
         <meta name="description" content="watiti's book keeping app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 md:grid-cols-2 px-6 py-4 gap-3 '>
-        <div className='h-[50px] xs:col-span-1 md:col-span-2' />
-        <div className='xs:col-span-2 md:col-span-1 py-2 flex flex-col justify-center items-center self-center'>
+      <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 lg:grid-cols-2 md:px-2 lg:px-4 xl:px-6 py-4 gap-3 '>
+        <div className='h-[50px] xs:col-span-1 lg:col-span-2' />
+        <div className='xs:col-span-2 lg:col-span-1 py-2 flex flex-col justify-center items-center self-center'>
           <CarsTableCard loading2={loading} docList={docList} />
           <span className='py-2' />
           <Piechart loading={loading} docList={docList} />
         </div>
-        <div className='xs:col-span-2 md:col-span-1 py-2  flex flex-col justify-center items-center self-center'>
+        <div className='xs:col-span-2 lg:col-span-1 py-2  flex flex-col justify-center items-center self-center'>
           <OtherExpTable />
           <span className='py-2' />
           <Bargraph loading2={loading} docList={docList} />

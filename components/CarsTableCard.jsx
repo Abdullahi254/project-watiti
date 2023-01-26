@@ -135,7 +135,7 @@ function CarsTableCard({ loading2, docList }) {
 
 
     return (
-        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2 max-h-[550px]
+        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2 max-h-[400px] md:max-h-[550px]
        scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin' id='car-table'>
             <span className='text-xs italic font-medium px-6'>Account: {currentUser && currentUser.email}</span>
             <div className='w-full py-4 px-6 flex justify-between '>
