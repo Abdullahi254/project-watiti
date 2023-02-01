@@ -183,7 +183,7 @@ function OtherExpTable({ numplate }) {
 
 
     return (
-        <div className='my-2 w-full border-2 rounded-lg overflow-x-auto relative bg-white py-8 px-4
+        <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-8 px-4
         scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin'>
             <div ref={componentRef}> 
                 <h2 className='px-6 xs:text-2xl md:text-3xl mb-2'>Extra Expenses</h2>

@@ -34,22 +34,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className=' max-w-[1240px] mx-auto grid xs:grid-cols-1 lg:grid-cols-2 md:px-2 lg:px-4 xl:px-6 py-4 gap-3 '>
-        <div className='h-[50px] xs:col-span-1 lg:col-span-2' />
-        <div className='xs:col-span-2 lg:col-span-1 py-2 flex flex-col justify-center items-center self-center'>
+      <main className='my-24'>
+
+        <section className='max-w-[1240px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max mb-[40px]'>
           <CarsTableCard loading2={loading} docList={docList} />
-          <span className='py-2' />
-          <Piechart loading={loading} docList={docList} />
-        </div>
-        <div className='xs:col-span-2 lg:col-span-1 py-2  flex flex-col justify-center items-center self-center'>
           <OtherExpTable />
-          <span className='py-2' />
-          <Bargraph loading2={loading} docList={docList} />
-          <span className='py-2' />
-          <LineGraph />
-        </div>
-      </div>
-      <div className='h-1/4' />
+        </section>
+
+        <section className='max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3'>
+          <div>
+            <Piechart loading={loading} docList={docList} />
+          </div>
+
+          <div className='flex flex-col items-center space-y-3'>
+            <Bargraph loading2={loading} docList={docList} />
+            <LineGraph />
+          </div>
+        </section>
+
+      </main>
     </div>
   )
 }

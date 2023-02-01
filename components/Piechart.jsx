@@ -1,5 +1,5 @@
 import React from 'react'
-import {bgColors, borderColors} from '../public/colors/colors'
+import { bgColors, borderColors } from '../public/colors/colors'
 import ClipLoader from "react-spinners/ClipLoader";
 import {
     Chart as ChartJS,
@@ -63,10 +63,10 @@ ChartJS.register(
 function Piechart({ loading, docList }) {
 
     const data = {
-        labels: docList.map(doc=>doc.name.toUpperCase()),
+        labels: docList.map(doc => doc.name.toUpperCase()),
         datasets: [{
             label: 'Total Monthly Expenses',
-            data: docList.map((doc=>doc.total)),
+            data: docList.map((doc => doc.total)),
             backgroundColor: borderColors,
             hoverOffset: 4,
             radius: '60%'
@@ -76,12 +76,14 @@ function Piechart({ loading, docList }) {
     return (
         <>
             {
-                loading ? <ClipLoader loading={loading} color='#52525b' size={100} /> :
+                loading ? <div className='text-center'>
+                    <ClipLoader loading={loading} color='#52525b' size={100} />
+                </div> :
                     <>
-                    <p className='py-1 italic font-semibold text-sm'>Total Expenses</p>
-                    <Chart type='pie' data={data} />
+                        <p className='py-1 italic font-semibold text-sm text-center'>Total Expenses</p>
+                        <Chart type='pie' data={data} />
                     </>
-                    
+
             }
 
         </>
