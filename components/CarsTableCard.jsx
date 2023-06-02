@@ -42,7 +42,7 @@ function CarsTableCard({ loading2, docList }) {
                             total += innerTotal
                         } else if (querySnapshot.docs.length === 1) {
                             innerTotal += querySnapshot.docs[0].data().amount
-                            total +=innerTotal
+                            total += innerTotal
                         } else {
                             total += 0
                         }
@@ -87,18 +87,30 @@ function CarsTableCard({ loading2, docList }) {
         try {
             const event = new Date()
             const plateName = inputRef.current.value.trim().toLowerCase()
+            const names = docList.map(doc => doc.name)
+            console.log(names)
+            const doubleEntry = names.includes(plateName)
+            if (doubleEntry) {
+                throw new Error("DOUBLE ENTRY")
+            }
             await setDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${plateName}`), {
                 name: plateName,
                 date: event.toLocaleString('en-GB'),
-                total: 0
-            })
+            },
+                {
+                    merge: true,
+                })
             setLoading(false)
             setSuccess('Successfully added a new vehicle!')
             inputRef.current.value = ''
         } catch (er) {
             setLoading(false)
             console.log(er)
-            setError('Error adding a vehicle!')
+            if (er.message === "DOUBLE ENTRY") {
+                setError('Error! Double Entry not Allowed')
+            } else {
+                setError('Error adding a vehicle!')
+            }
         }
         setDisabled(true)
     }
@@ -154,9 +166,9 @@ function CarsTableCard({ loading2, docList }) {
                         <th scope="col" className="py-3 px-6">
                             {search ? "Total" : "Grand Total"}
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        {/* <th scope="col" className="py-3 px-6">
                             Action
-                        </th>
+                        </th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -172,9 +184,9 @@ function CarsTableCard({ loading2, docList }) {
                                 <td className="py-4 px-6">
                                     KSH {val.total.toFixed(2)}
                                 </td>
-                                <td className="py-4 px-6">
+                                {/* <td className="py-4 px-6">
                                     <button className='border-transparent text-red-400 hover:text-red-700 text-sm py-1 px-2 rounded' onClick={() => handleDel(val.name)}>Delete</button>
-                                </td>
+                                </td> */}
                             </tr>
                         )
                     }) :
@@ -188,11 +200,11 @@ function CarsTableCard({ loading2, docList }) {
                                         {val.date}
                                     </td>
                                     <td className="py-4 px-6">
-                                        KSH {val.total.toFixed(2)}
+                                        KSH {val.total?.toFixed(2)}
                                     </td>
-                                    <td className="py-4 px-6">
+                                    {/* <td className="py-4 px-6">
                                         <button className='border-transparent text-red-400 hover:text-red-700 text-sm py-1 px-2 rounded' onClick={() => handleDel(val.name)}>Delete</button>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             )
                         })
