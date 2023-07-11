@@ -10,7 +10,7 @@ function Vehicle() {
   const router = useRouter()
   const { numplate } = router.query
   return (
-    <div className=' w-full h-screen'>
+    <div className=' w-full pb-20'>
       <div className='h-20' />
       <div className=' max-w-[1000px] mx-auto text-center'>
         <FuelTable numplate={numplate} />

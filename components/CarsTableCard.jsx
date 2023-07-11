@@ -148,14 +148,14 @@ function CarsTableCard({ loading2, docList }) {
 
     return (
         <div className='w-full border-2 rounded-lg overflow-x-auto relative bg-white py-10 mb-2 max-h-[400px] md:max-h-[550px]
-       scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin' id='car-table'>
+       scrollbar-thumb-gray-500 scrollbar-track-white scrollbar-thin text-xs md:text-sm' id='car-table'>
             <span className='text-xs italic font-medium px-6'>Account: {currentUser && currentUser.email}</span>
             <div className='w-full py-4 px-6 flex justify-between '>
-                <h2 className='xs:text-2xl md:text-3xl'>List of Vehicles</h2>
+                <h2 className='text-sm md:text-base'>List of Vehicles</h2>
                 <input type="date" ref={dateRef} onChange={handleSearch} />
             </div>
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-xs md:text-sm text-left text-gray-500">
+                <thead className="text-[9px] md:text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" className="py-3 px-6">
                             Plate Number
@@ -174,8 +174,8 @@ function CarsTableCard({ loading2, docList }) {
                 <tbody>
                     {search ? total.map((val, index) => {
                         return (
-                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                                <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase">
+                            <tr className="bg-white border-b" key={index}>
+                                <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap uppercase">
                                     {val.name}
                                 </th>
                                 <td className="py-4 px-6">
@@ -192,8 +192,8 @@ function CarsTableCard({ loading2, docList }) {
                     }) :
                         docList.length > 0 && docList.map((val, index) => {
                             return (
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                                    <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase">
+                                <tr className="bg-white border-b" key={index}>
+                                    <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap uppercase">
                                         {val.name}
                                     </th>
                                     <td className="py-4 px-6">
@@ -223,15 +223,15 @@ function CarsTableCard({ loading2, docList }) {
 
             {
                 showButton ? <div className='w-full my-2'>
-                    <MdAdd className=' mx-auto text-3xl cursor-pointer text-gray-600' onClick={handleAddForm} />
+                    <MdAdd className=' mx-auto text-2xl md:text-3xl cursor-pointer text-gray-600' onClick={handleAddForm} />
                 </div> :
                     <form className="w-full max-w-[300px] mx-auto py-2" onSubmit={addVehicleHandler}>
                         <div className="flex items-center border-b border-gray-500 py-2">
                             <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Plate Number" ref={inputRef} onChange={handleDisableButton} />
-                            <button disabled={disabled} className=" uppercase border-transparent disabled:bg-gray-300  flex-shrink-0 bg-gray-600 hover:bg-gray-900 border-gray-500  text-sm  text-white py-1 px-2 rounded" type="submit" >
+                            <button disabled={disabled} className=" uppercase border-transparent disabled:bg-gray-300  flex-shrink-0 bg-gray-600 hover:bg-gray-900 border-gray-500 text-xs md:text-sm  text-white py-1 px-2 rounded" type="submit" >
                                 Add
                             </button>
-                            <button className="flex-shrink-0 border-transparent border-2 text-red-400 hover:text-red-700 text-sm py-1 px-2 rounded" type="button" onClick={handleAddForm}>
+                            <button className="flex-shrink-0 border-transparent border-2 text-red-400 hover:text-red-700 py-1 px-2 rounded text-xs md:text-sm" type="button" onClick={handleAddForm}>
                                 Cancel
                             </button>
                         </div>
