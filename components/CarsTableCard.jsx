@@ -96,6 +96,7 @@ function CarsTableCard({ loading2, docList }) {
             await setDoc(doc(db, `users/${currentUser.uid}/vehicles`, `${plateName}`), {
                 name: plateName,
                 date: event.toLocaleString('en-GB'),
+                total: 0
             },
                 {
                     merge: true,
